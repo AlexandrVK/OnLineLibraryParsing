@@ -36,6 +36,6 @@ for book in range(1,10):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'lxml')
         title, autor = str.split(soup.find('h1').text,"::")
-        print(f"{book}. ",download_txt(f"https://tululu.org/txt.php?id={book}", title.strip()))
+        print(f"{book}.",download_txt(f"https://tululu.org/txt.php?id={book}", title.strip()))
     except: 
         pass
