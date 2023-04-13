@@ -51,9 +51,9 @@ def download_image(url,filename,folder='images/'):
 
 
 
-for book in range(1,10):
+for book in range(1,2):
     try:  
-
+        book=9
         response = requests.get(f"https://tululu.org/b{book}")
         check_for_redirect(response)
         response.raise_for_status()
@@ -62,11 +62,15 @@ for book in range(1,10):
         
         print(f"{book}.",download_txt(f"https://tululu.org/txt.php?id={book}", title.strip()))
 
+
         url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
         filename =  unquote(urlsplit(url).path.split("/")[-1])
         download_image(url,filename)
         
-        {print(string.find('span',class_ ='black' ).text) for string in soup.find_all('div',class_ ='texts')}
-        
+        # Парсим комментарии
+        [print(string.find('span',class_ ='black' ).text.strip()) for string in soup.find_all('div',class_ ='texts')]
+
+        # Парсим жанры
+        print([string.text.strip() for string in soup.find('span',class_='d_book').find_all('a')])
     except: 
         pass
