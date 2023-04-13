@@ -139,6 +139,7 @@ cython_debug/
 
 # Users
 books
+images
 poetry.lock
 pyproject.toml
 venv
