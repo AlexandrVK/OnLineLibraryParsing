@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 import pprint
 from urllib.parse import urljoin, urlsplit,unquote
@@ -69,7 +70,15 @@ def parse_book_page(soup):
            } 
 
 def main():
-    for book in range(1,10):
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("-s", "--start_id", type=int, default=1,
+                help="с какой страницы скачать")
+    parser.add_argument("-e", "--end_id", type=int, default=2,
+                help="по какую страницу скачать")
+    args = parser.parse_args()
+    
+    for book in range(args.start_id,args.end_id):
         try:  
             
             response = requests.get(f"https://tululu.org/b{book}")
