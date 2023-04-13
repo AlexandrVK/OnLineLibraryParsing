@@ -1,4 +1,5 @@
 from pathlib import Path
+import pprint
 from urllib.parse import urljoin, urlsplit,unquote
 import requests
 import os
@@ -48,29 +49,48 @@ def download_image(url,filename,folder='images/'):
     except: 
         return False
 
+def parse_book_page(soup):
+    """Возвращает словарь со всеми данными о книге.
+    Args:
+        soup : принимает html-контент страницы
+    Returns:
+        Cловарь со всеми данными о книге:
+    """ 
+    title, author = [string.strip() for string in str.split(soup.find('h1').text, "::")]
 
+    genres = [string.text.strip() for string in soup.find('span',class_='d_book').find_all('a')]
+    
+    comments = [string.find('span',class_ ='black' ).text.strip() for string in soup.find_all('div',class_ ='texts')]
+            
+    return {"Название"      : title,
+            "Автор"         : author,
+            "Жанры"         : genres,
+            "Комментарии"   : comments
+           } 
 
+def main():
+    for book in range(1,10):
+        try:  
+            
+            response = requests.get(f"https://tululu.org/b{book}")
+            check_for_redirect(response)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'lxml')
 
-for book in range(1,10):
-    try:  
-        
-        response = requests.get(f"https://tululu.org/b{book}")
-        check_for_redirect(response)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'lxml')
-        title, autor = str.split(soup.find('h1').text,"::")
-        
-        print(f"{book}.",download_txt(f"https://tululu.org/txt.php?id={book}", title.strip()))
+            book_data=parse_book_page(soup)
 
+                   
+            print(f"{book}.",download_txt(f"https://tululu.org/txt.php?id={book}", book_data["Название"]))
 
-        url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
-        filename =  unquote(urlsplit(url).path.split("/")[-1])
-        download_image(url,filename)
-        
-        # Парсим комментарии
-        [print(string.find('span',class_ ='black' ).text.strip()) for string in soup.find_all('div',class_ ='texts')]
+            url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
+            filename =  unquote(urlsplit(url).path.split("/")[-1])
+            
+            download_image(url,filename)
+           
+            pprint.PrettyPrinter().pprint(book_data)
 
-        # Парсим жанры
-        print([string.text.strip() for string in soup.find('span',class_='d_book').find_all('a')])
-    except: 
-        pass
+        except: 
+            pass
+
+if __name__ == '__main__':
+    main()
