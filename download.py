@@ -51,9 +51,9 @@ def download_image(url,filename,folder='images/'):
 
 
 
-for book in range(1,2):
+for book in range(1,10):
     try:  
-        book=9
+        
         response = requests.get(f"https://tululu.org/b{book}")
         check_for_redirect(response)
         response.raise_for_status()
