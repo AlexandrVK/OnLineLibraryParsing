@@ -5,7 +5,7 @@ import requests
 import os
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
-import urllib.parse
+
 
 
 def check_for_redirect(response):
@@ -89,7 +89,7 @@ def main():
             parsed_page_data=parse_book_page(soup)
 
           
-            params = urllib.parse.urlencode({"id": book})
+            
             download_txt(f"https://tululu.org/txt.php", {"id": book}, parsed_page_data["title"])
 
             url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
