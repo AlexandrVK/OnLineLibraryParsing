@@ -90,14 +90,14 @@ def main():
             parsed_page_data=parse_book_page(soup)
 
                    
-            print(f"{book}.",download_txt(f"https://tululu.org/txt.php?id={book}", parsed_page_data["Название"]))
+            download_txt(f"https://tululu.org/txt.php?id={book}", parsed_page_data["Название"])
 
             url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
             filename =  unquote(urlsplit(url).path.split("/")[-1])
             
             download_image(url,filename)
            
-            pprint.PrettyPrinter().pprint(parsed_page_data)
+             
 
         except: 
             pass
