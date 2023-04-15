@@ -3,8 +3,10 @@ from pathlib import Path
 from urllib.parse import urljoin, urlsplit,unquote
 import requests
 import os
+import sys
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
+import time
 
 
 def check_for_redirect(response):
@@ -72,7 +74,7 @@ def main():
                 help="по какую страницу скачать")
     args = parser.parse_args()
     
-    for book_id in range(args.start_id,args.end_id):
+    for book_id in range(args.start_id,args.end_id+1):
         try:  
             response = requests.get(f"https://tululu.org/b{book_id}/")
             check_for_redirect(response)
@@ -86,8 +88,15 @@ def main():
             filename =  unquote(urlsplit(parsed_page_data["url"]).path.split("/")[-1])
             
             download_image(parsed_page_data["url"],filename)
-        except: 
-            pass
+        except requests.exceptions.HTTPError as e:
+            print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
+        except requests.exceptions.ConnectionError as e:
+            print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
+            time.sleep(5) # Добавляем задержку в 5 секунд при ошибке соединения
+            continue
+        
+        except Exception as e:
+            print(f"Произошла ошибка: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()
