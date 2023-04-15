@@ -8,7 +8,8 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 
 def check_for_redirect(response):
-     if any(r.status_code == 302 for r in response.history):
+     
+     if not len(response.history) == 0:
         raise requests.exceptions.HTTPError()
 
 def download_txt(url, filename, folder='books/'):
@@ -74,14 +75,14 @@ def main():
     
     parser.add_argument("-s", "--start_id", type=int, default=1,
                 help="с какой страницы скачать")
-    parser.add_argument("-e", "--end_id", type=int, default=2,
+    parser.add_argument("-e", "--end_id", type=int, default=10,
                 help="по какую страницу скачать")
     args = parser.parse_args()
     
     for book in range(args.start_id,args.end_id):
         try:  
             
-            response = requests.get(f"https://tululu.org/b{book}")
+            response = requests.get(f"https://tululu.org/b{book}/")
             check_for_redirect(response)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'lxml')
