@@ -48,14 +48,14 @@ def download_image(url,filename,folder="images/"):
         file.write(response.content)
     return True    
 
-def parse_book_page(soup):
+def parse_book_page(soup,site_url):
     """Возвращает словарь со всеми данными о книге.
     Args:
         soup : принимает html-контент страницы
     Returns:
         Cловарь со всеми данными о книге:
     """ 
-    url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
+    img_url = urljoin(site_url,soup.find(class_ ='bookimage').find('img')['src'])
 
     title, author = [string.strip() for string in str.split(soup.find("h1").text, "::")]
 
@@ -63,7 +63,7 @@ def parse_book_page(soup):
     
     comments = [string.find("span",class_ ="black" ).text.strip() for string in soup.find_all("div",class_ ="texts")]
             
-    return {"url" : url, "title" : title, "author" : author, "genres" : genres, "comments" : comments } 
+    return {"img_url" : img_url, "title" : title, "author" : author, "genres" : genres, "comments" : comments } 
 
 def main():
     parser = argparse.ArgumentParser()
@@ -76,23 +76,25 @@ def main():
     
     for book_id in range(args.start_id,args.end_id+1):
         try:  
-            response = requests.get(f"https://tululu.org/b{book_id}/")
+            site_url="https://tululu.org"
+            url = urljoin(site_url,f"b{book_id}/")  
+            response = requests.get(url)
             check_for_redirect(response)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
 
-            parsed_page_data = parse_book_page(soup)
+            parsed_page_data = parse_book_page(soup,site_url)
             
-            download_txt(f"https://tululu.org/txt.php", {"id": book_id}, parsed_page_data["title"])
+            download_txt(urljoin(site_url,"txt.php"), {"id": book_id}, parsed_page_data["title"])
 
-            filename =  unquote(urlsplit(parsed_page_data["url"]).path.split("/")[-1])
+            filename =  unquote(urlsplit(parsed_page_data["img_url"]).path.split("/")[-1])
             
-            download_image(parsed_page_data["url"],filename)
+            download_image(parsed_page_data["img_url"],filename)
         except requests.exceptions.HTTPError as e:
             print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
         except requests.exceptions.ConnectionError as e:
             print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
-            time.sleep(5) # Добавляем задержку в 5 секунд при ошибке соединения
+            time.sleep(5) 
             continue
         
         except Exception as e:
