@@ -67,11 +67,7 @@ def parse_book_page(soup):
     
     comments = [string.find('span',class_ ='black' ).text.strip() for string in soup.find_all('div',class_ ='texts')]
             
-    return {"Название"      : title,
-            "Автор"         : author,
-            "Жанры"         : genres,
-            "Комментарии"   : comments
-           } 
+    return {"Название" : title, "Автор" : author, "Жанры" : genres, "Комментарии" : comments } 
 
 def main():
     parser = argparse.ArgumentParser()
