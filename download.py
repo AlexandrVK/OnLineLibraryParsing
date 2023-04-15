@@ -53,13 +53,15 @@ def parse_book_page(soup):
     Returns:
         Cловарь со всеми данными о книге:
     """ 
+    url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
+
     title, author = [string.strip() for string in str.split(soup.find("h1").text, "::")]
 
     genres = [string.text.strip() for string in soup.find("span",class_="d_book").find_all("a")]
     
     comments = [string.find("span",class_ ="black" ).text.strip() for string in soup.find_all("div",class_ ="texts")]
             
-    return {"title" : title, "author" : author, "genres" : genres, "comments" : comments } 
+    return {"url" : url, "title" : title, "author" : author, "genres" : genres, "comments" : comments } 
 
 def main():
     parser = argparse.ArgumentParser()
@@ -81,10 +83,9 @@ def main():
             
             download_txt(f"https://tululu.org/txt.php", {"id": book}, parsed_page_data["title"])
 
-            url = urljoin("https://tululu.org/",soup.find(class_ ="bookimage").find("img")["src"])
-            filename =  unquote(urlsplit(url).path.split("/")[-1])
+            filename =  unquote(urlsplit(parsed_page_data["url"]).path.split("/")[-1])
             
-            download_image(url,filename)
+            download_image(parsed_page_data["url"],filename)
         except: 
             pass
 
