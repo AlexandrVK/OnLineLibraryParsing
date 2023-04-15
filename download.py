@@ -67,7 +67,7 @@ def parse_book_page(soup):
     
     comments = [string.find('span',class_ ='black' ).text.strip() for string in soup.find_all('div',class_ ='texts')]
             
-    return {"Название" : title, "Автор" : author, "Жанры" : genres, "Комментарии" : comments } 
+    return {"title" : title, "author" : author, "genres" : genres, "comments" : comments } 
 
 def main():
     parser = argparse.ArgumentParser()
@@ -90,7 +90,7 @@ def main():
 
           
             params = urllib.parse.urlencode({"id": book})
-            download_txt(f"https://tululu.org/txt.php", {"id": book}, parsed_page_data["Название"])
+            download_txt(f"https://tululu.org/txt.php", {"id": book}, parsed_page_data["title"])
 
             url = urljoin("https://tululu.org/",soup.find(class_ ='bookimage').find('img')['src'])
             filename =  unquote(urlsplit(url).path.split("/")[-1])
