@@ -72,16 +72,16 @@ def main():
                 help="по какую страницу скачать")
     args = parser.parse_args()
     
-    for book in range(args.start_id,args.end_id):
+    for book_id in range(args.start_id,args.end_id):
         try:  
-            response = requests.get(f"https://tululu.org/b{book}/")
+            response = requests.get(f"https://tululu.org/b{book_id}/")
             check_for_redirect(response)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
 
-            parsed_page_data=parse_book_page(soup)
+            parsed_page_data = parse_book_page(soup)
             
-            download_txt(f"https://tululu.org/txt.php", {"id": book}, parsed_page_data["title"])
+            download_txt(f"https://tululu.org/txt.php", {"id": book_id}, parsed_page_data["title"])
 
             filename =  unquote(urlsplit(parsed_page_data["url"]).path.split("/")[-1])
             
