@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit,unquote
+from urllib.parse import urljoin, urlsplit, unquote
 import requests
 import os
 import sys

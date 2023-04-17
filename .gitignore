@@ -146,4 +146,6 @@ venv
 .breakpoints
 .replit
 replit.nix
-start.cmd
+scripts
+pyvenv.cfg
+111.py
