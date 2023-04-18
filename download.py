@@ -83,13 +83,13 @@ def main():
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
 
-            parsed_page_data = parse_book_page(soup,site_url)
+            book_data = parse_book_page(soup,site_url)
             
-            download_txt(urljoin(site_url,"txt.php"), {"id": book_id}, parsed_page_data["title"])
+            download_txt(urljoin(site_url,"txt.php"), {"id": book_id}, book_data["title"])
 
-            filename =  unquote(urlsplit(parsed_page_data["img_url"]).path.split("/")[-1])
+            filename =  unquote(urlsplit(book_data["img_url"]).path.split("/")[-1])
             
-            download_image(parsed_page_data["img_url"],filename)
+            download_image(book_data["img_url"],filename)
         except requests.exceptions.HTTPError as e:
             print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
         except requests.exceptions.ConnectionError as e:
