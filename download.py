@@ -75,16 +75,17 @@ def main():
     
     for book_id in range(args.start_id,args.end_id+1):
         try:  
-            site_url="https://tululu.org"
-            url = urljoin(site_url,f"b{book_id}/")  
+            url = f"https://tululu.org/b{book_id}/"
             response = requests.get(url)
             check_for_redirect(response)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
-
-            book_data = parse_book_page(soup,site_url)
             
-            download_txt(urljoin(site_url,"txt.php"), {"id": book_id}, book_data["title"])
+            base_url = urljoin(urlsplit(url)._replace(path='', query='', fragment='').geturl(), '/')
+            
+            book_data = parse_book_page(soup,base_url)
+            
+            download_txt(urljoin(base_url,"txt.php"), {"id": book_id}, book_data["title"])
 
             filename =  unquote(urlsplit(book_data["img_url"]).path.split("/")[-1])
             
