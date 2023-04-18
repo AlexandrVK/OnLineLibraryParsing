@@ -67,11 +67,10 @@ def parse_book_page(soup,site_url):
 
 def main():
     parser = argparse.ArgumentParser()
-    
-    parser.add_argument("-s", "--start_id", type=int, default=1,
-                help="с какой страницы скачать")
-    parser.add_argument("-e", "--end_id", type=int, default=10,
-                help="по какую страницу скачать")
+    parser.description = "Этот скрипт скачивает страницы в диапазоне от 'start_id' до 'end_id' с сайта tululu.org"
+    parser.add_argument("-s", "--start_id", type=int, default=1, help="Начальный номер страницы для скачивания. По умолчанию: 1.")
+    parser.add_argument("-e", "--end_id", type=int, default=10, help="Конечный номер страницы для скачивания. По умолчанию: 10.")
+
     args = parser.parse_args()
     
     for book_id in range(args.start_id,args.end_id+1):
