@@ -96,9 +96,7 @@ def main():
             print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
             time.sleep(5) 
             continue
-        
-        except Exception as e:
-            print(f"Произошла ошибка: {e}", file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()
