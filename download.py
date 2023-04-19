@@ -83,13 +83,13 @@ def main():
             
             base_url = urljoin(urlsplit(url)._replace(path='', query='', fragment='').geturl(), '/')
             
-            book_data = parse_book_page(soup,base_url)
+            parsed_page = parse_book_page(soup,base_url)
             
-            download_txt(urljoin(base_url,"txt.php"), {"id": book_id}, book_data["title"])
+            download_txt(urljoin(base_url,"txt.php"), {"id": book_id}, parsed_page["title"])
 
-            filename =  unquote(urlsplit(book_data["img_url"]).path.split("/")[-1])
+            filename =  unquote(urlsplit(parsed_page["img_url"]).path.split("/")[-1])
             
-            download_image(book_data["img_url"],filename)
+            download_image(parsed_page["img_url"],filename)
         except requests.exceptions.HTTPError as e:
             print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
         except requests.exceptions.ConnectionError as e:
