@@ -25,6 +25,7 @@ def download_txt(url, payload, filename, folder='books/'):
         str: Путь до файла, куда сохранён текст.
     """
     Path(folder).mkdir(parents=True, exist_ok=True)
+    url = urljoin(urlsplit(url)._replace(path='', query='', fragment='').geturl(), "txt.php")
     response = requests.get(url,params = payload )
     check_for_redirect(response)
     response.raise_for_status()
@@ -46,7 +47,7 @@ def download_image(url,filename,folder="images/"):
     response.raise_for_status()
     with open(os.path.join("images",filename), "wb") as file:
         file.write(response.content)
-    return True    
+       
 
 def parse_book_page(soup,site_url):
     """Возвращает словарь со всеми данными о книге.
@@ -81,11 +82,9 @@ def main():
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
             
-            base_url = urljoin(urlsplit(url)._replace(path='', query='', fragment='').geturl(), '/')
+            parsed_page = parse_book_page(soup,url)
             
-            parsed_page = parse_book_page(soup,base_url)
-            
-            download_txt(urljoin(base_url,"txt.php"), {"id": book_id}, parsed_page["title"])
+            download_txt(url, {"id": book_id}, parsed_page["title"])
 
             filename =  unquote(urlsplit(parsed_page["img_url"]).path.split("/")[-1])
             
