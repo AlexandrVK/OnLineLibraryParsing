@@ -56,13 +56,15 @@ def parse_book_page(soup,site_url):
     Returns:
         Cловарь со всеми данными о книге:
     """ 
-    img_url = urljoin(site_url,soup.find(class_ ='bookimage').find('img')['src'])
 
     title, author = [string.strip() for string in str.split(soup.find("h1").text, "::")]
 
+    img_url = urljoin(site_url,soup.find(class_ ='bookimage').find('img')['src'])
+
+    comments = [string.find("span",class_ ="black" ).text.strip() for string in soup.find_all("div",class_ ="texts")]
+    
     genres = [string.text.strip() for string in soup.find("span",class_="d_book").find_all("a")]
     
-    comments = [string.find("span",class_ ="black" ).text.strip() for string in soup.find_all("div",class_ ="texts")]
             
     return {"img_url" : img_url, "title" : title, "author" : author, "genres" : genres, "comments" : comments } 
 
