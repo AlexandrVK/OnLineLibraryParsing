@@ -149,3 +149,5 @@ replit.nix
 scripts
 pyvenv.cfg
 111.py
+printjson.py
+descriptions.json

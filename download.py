@@ -7,6 +7,7 @@ import sys
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 import time
+import re
 
 
 def check_for_redirect(response):
@@ -31,7 +32,7 @@ def download_txt(url, payload, filename, folder='books/'):
     response.raise_for_status()
     filepath=os.path.join(folder,f"{sanitize_filename(filename)}.txt")
     with open(filepath, "w") as file:
-        file.write(response.text)
+        file.write(re.sub('[^а-яА-ЯёЁ0-9\s.,;:!?"-]', '',response.text))
     return filepath  
 
 def download_image(url,filename,folder="images/"):
@@ -57,15 +58,15 @@ def parse_book_page(soup,site_url):
         Cловарь со всеми данными о книге:
     """ 
 
-    title, author = [string.strip() for string in str.split(soup.find("h1").text, "::")]
+    title, author = [string.strip() for string in soup.select_one("h1").get_text().split("::")]
 
-    img_url = urljoin(site_url,soup.find(class_ ='bookimage').find('img')['src'])
+    img_url = urljoin(site_url, soup.select_one(".bookimage img")["src"])
 
-    comments = [string.find("span",class_ ="black" ).text.strip() for string in soup.find_all("div",class_ ="texts")]
+    comments = [div.select_one(".black").text.strip() for div in soup.select(".texts")]
+
     
-    genres = [string.text.strip() for string in soup.find("span",class_="d_book").find_all("a")]
-    
-            
+    genres = [string.text.strip() for string in soup.select("span.d_book a")]
+              
     return {"img_url" : img_url, "title" : title, "author" : author, "genres" : genres, "comments" : comments } 
 
 def main():

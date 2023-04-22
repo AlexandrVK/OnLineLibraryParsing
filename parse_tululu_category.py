@@ -12,21 +12,6 @@ from download import download_txt, download_image, parse_book_page, check_for_re
 import json
 
 
-def parse_scifi():
-
-    site_url = urlsplit("https://tululu.org/l55/")._replace(path='', query='', fragment='').geturl()
-    pages=[]
-    for i in range(2):
-        url = urljoin("https://tululu.org/l55/",str(i+1))
-        response = requests.get(url)
-        if  response.history :
-           break    
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
-        pages.extend([urljoin(site_url,table_tag.find("a").get("href")) for table_tag in soup.find_all("table",class_ ="d_book")])
-
-    print(pages)
-
 def main():
     # parser = argparse.ArgumentParser()
     # parser.description = "Этот скрипт скачивает страницы в диапазоне от 'start_id' до 'end_id' с сайта tululu.org"
@@ -43,7 +28,7 @@ def main():
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "lxml")
 
-        pages.extend([urljoin(site_url,table_tag.find("a").get("href")) for table_tag in soup.find_all("table",class_ ="d_book")])
+        pages.extend([urljoin(site_url, table_tag.select_one("a")["href"]) for table_tag in soup.select("table.d_book")])
 
     descriptions = []
     for url in pages:
