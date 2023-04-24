@@ -1,7 +1,5 @@
 import argparse
-from pathlib import Path
 import pathlib
-import pprint
 from urllib.parse import urljoin, urlsplit, unquote
 import requests
 import os
@@ -32,7 +30,7 @@ def main():
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "lxml")
     lastpage = int(soup.select_one('p.center a.npage:last-child').text) 
-    if args.end_page+1 < lastpage:
+    if args.end_page < lastpage:
         lastpage = args.end_page
 
     pages=[]
