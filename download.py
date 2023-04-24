@@ -46,7 +46,7 @@ def download_image(url,filename,folder="images/"):
     response = requests.get(url)
     check_for_redirect(response)
     response.raise_for_status()
-    with open(os.path.join("images",filename), "wb") as file:
+    with open(os.path.join(folder,filename), "wb") as file:
         file.write(response.content)
        
 
