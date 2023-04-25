@@ -1,13 +1,15 @@
 import argparse
-from pathlib import Path
-from urllib.parse import urljoin, urlsplit, unquote
-import requests
 import os
+import re
 import sys
+import time
+from pathlib import Path
+from urllib.parse import unquote, urljoin, urlsplit
+
+import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
-import time
-import re
+
 
 
 def check_for_redirect(response):

@@ -1,14 +1,17 @@
 import argparse
-import pathlib
-from urllib.parse import urljoin, urlsplit, unquote
-import requests
+import json
 import os
+import pathlib
 import sys
+import time
+from urllib.parse import unquote, urljoin, urlsplit
+
+import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
-import time
-from download import download_txt, download_image, parse_book_page, check_for_redirect
-import json
+
+from download import check_for_redirect, download_image, download_txt, parse_book_page
+
 
 
 def main():
