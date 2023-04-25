@@ -48,12 +48,19 @@ def main():
 
     pages=[]
     for numpage in range(args.start_page,lastpage):
-        url = urljoin(scifi_url,str(numpage))
-        response = requests.get(url)
-        check_for_redirect(response)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
-        pages.extend([urljoin(site_url, table_tag.select_one("a")["href"]) for table_tag in soup.select("table.d_book")])
+        try: 
+            url = urljoin(scifi_url,str(numpage))
+            response = requests.get(url)
+            check_for_redirect(response)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "lxml")
+            pages.extend([urljoin(site_url, table_tag.select_one("a")["href"]) for table_tag in soup.select("table.d_book")])
+        except requests.exceptions.HTTPError as e:
+            print(f"Ошибка при скачивании страницы: {e}", file=sys.stderr)
+        except requests.exceptions.ConnectionError as e:
+            print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
+            time.sleep(5) 
+            continue
 
     descriptions = []
     for url in pages:
