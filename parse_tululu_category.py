@@ -69,25 +69,21 @@ def main():
             check_for_redirect(response)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "lxml")
-            
             parsed_page = parse_book_page(soup,url)
             if not args.skip_txt:
                 download_txt(url, {"id": url.split('b')[-1]}, parsed_page["title"],os.path.join(args.dest_folder,"books"))
             if not args.skip_imgs:
                 filename =  unquote(urlsplit(parsed_page["img_url"]).path.split("/")[-1])
                 download_image(parsed_page["img_url"],filename,os.path.join(args.dest_folder,"image"))
-            parsed_page["book_path"] = f"books/{sanitize_filename(parsed_page['title'])}.txt"
-            parsed_page["img_url"] = f"images/{sanitize_filename(parsed_page['img_url'].split('/')[-1])}"
+            parsed_page["book_path"] = os.path.join(args.dest_folder,"books",f"{sanitize_filename(parsed_page['title'])}.txt").replace(os.sep, '/')
+            parsed_page["img_url"] = os.path.join(args.dest_folder,"images",f"{sanitize_filename(parsed_page['img_url'].split('/')[-1])}").replace(os.sep, '/')
             descriptions.append(parsed_page)
-
         except requests.exceptions.HTTPError as e:
             print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
         except requests.exceptions.ConnectionError as e:
             print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
             time.sleep(5) 
             continue
-
-
       
     if args.json_path.as_posix() == "." :
        json_path = pathlib.Path.cwd() / args.dest_folder 
@@ -98,7 +94,6 @@ def main():
   
     with open(os.path.join(json_path,'descriptions.json'), 'w') as file:
         json.dump(descriptions, file,ensure_ascii=False)
-        
 
 
 if __name__ == "__main__":
