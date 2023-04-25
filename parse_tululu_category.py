@@ -19,7 +19,7 @@ def main():
     parser.add_argument("-d", "--dest_folder", type=pathlib.Path, default="", help="Путь к каталогу с результатами парсинга: картинкам, книгам, JSON.")
     parser.add_argument("-si", "--skip_imgs", action="store_true", help="Не скачивать картинки.")
     parser.add_argument("-st", "--skip_txt", action="store_true", help="Не скачивать книги.")
-    parser.add_argument("-jp", "--json_path", type=pathlib.Path, default="", help="json_path — указать свой путь к *.json файлу с результатами.")
+    parser.add_argument("-jp", "--json_path", type=pathlib.Path, default="", help="json_path — указать свой путь к json файлу с результатами.")
     args = parser.parse_args()
 
     scifi_url = "https://tululu.org/l55/"
