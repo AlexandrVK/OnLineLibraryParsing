@@ -13,8 +13,7 @@ from pathvalidate import sanitize_filename
 from download import check_for_redirect, download_image, download_txt, parse_book_page
 
 
-
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.description = "Этот скрипт скачивает страницы SCIFI  с сайта tululu.org в диапазоне от 'start_page' до 'end_page'"
     parser.add_argument("-s", "--start_page", type=int, default=1, help="Начальный номер страницы для скачивания. По умолчанию: 1.")
@@ -23,16 +22,27 @@ def main():
     parser.add_argument("-si", "--skip_imgs", action="store_true", help="Не скачивать картинки.")
     parser.add_argument("-st", "--skip_txt", action="store_true", help="Не скачивать книги.")
     parser.add_argument("-jp", "--json_path", type=pathlib.Path, default="", help="json_path — указать свой путь к json файлу с результатами.")
+    return parser
+
+def get_last_page_number(scifi_url):
+    response = requests.get(scifi_url)
+    check_for_redirect(response)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "lxml")
+    lastpage = int(soup.select_one('p.center a.npage:last-child').text)
+    return lastpage
+
+
+def main():
+
+    parser = create_parser()
     args = parser.parse_args()
 
     scifi_url = "https://tululu.org/l55/"
     site_url = urlsplit(scifi_url)._replace(path='', query='', fragment='').geturl()
    
-    response = requests.get(scifi_url)
-    check_for_redirect(response)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "lxml")
-    lastpage = int(soup.select_one('p.center a.npage:last-child').text) 
+    lastpage = get_last_page_number(scifi_url)
+
     if args.end_page < lastpage:
         lastpage = args.end_page
 
