@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ```
 Далее необходимо перейти в папку со скриптом и выполнить команду:
 ```
-python main.py [-h] [-s START_PAGE] [-e END_PAGE] [-d DEST_FOLDER] [-si] [-st] [-jp JSON_PATH]
+python parse_tululu_category.py [-h] [-s START_PAGE] [-e END_PAGE] [-d DEST_FOLDER] [-si] [-st] [-jp JSON_PATH]
 ```
 
 ### Аргументы.
@@ -27,7 +27,7 @@ python main.py [-h] [-s START_PAGE] [-e END_PAGE] [-d DEST_FOLDER] [-si] [-st] [
 
 Пример запуска скрипта:
 ```
-pu download.py --start_page 1 --end_page 10
+pu parse_tululu_category.py --start_page 1 --end_page 10
 ```
 
 ### Цель проекта.
