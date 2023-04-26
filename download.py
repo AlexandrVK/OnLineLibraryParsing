@@ -48,9 +48,10 @@ def download_image(url,filename,folder="images/"):
     response = requests.get(url)
     check_for_redirect(response)
     response.raise_for_status()
+    filepath=os.path.join(folder,filename)
     with open(os.path.join(folder,filename), "wb") as file:
         file.write(response.content)
-       
+    return filepath   
 
 def parse_book_page(soup,site_url):
     """Возвращает словарь со всеми данными о книге.
