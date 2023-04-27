@@ -74,7 +74,7 @@ def main():
                 parsed_page["book_path"] = download_txt(url, {"id": url.split('b')[-1]}, parsed_page["title"],os.path.join(args.dest_folder,"books")).replace(os.sep, '/')
             if not args.skip_imgs:
                 filename =  unquote(urlsplit(parsed_page["img_url"]).path.split("/")[-1])
-                parsed_page["img_url"] =  download_image(parsed_page["img_url"],filename,os.path.join(args.dest_folder,"image")).replace(os.sep, '/')
+                parsed_page["img_url"] =  download_image(parsed_page["img_url"],filename,os.path.join(args.dest_folder,"images")).replace(os.sep, '/')
             descriptions.append(parsed_page)
         except requests.exceptions.HTTPError as e:
             print(f"Ошибка при скачивании книги: {e}", file=sys.stderr)
