@@ -17,7 +17,7 @@ def check_for_redirect(response):
      if response.history:
         raise requests.exceptions.HTTPError()
 
-def download_txt(url, payload, filename, folder='books/'):
+def download_txt(url, payload, filename, folder='books'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который требуется скачать.
@@ -37,7 +37,7 @@ def download_txt(url, payload, filename, folder='books/'):
         file.write(re.sub('[^а-яА-ЯёЁ0-9\s.,;:!?"-]', '',response.text))
     return filepath  
 
-def download_image(url,filename,folder="images/"):
+def download_image(url,filename,folder="images"):
     """Скачивает изображения по указанному URL.
     Args:
         filename (str): имя файла, которое присвоится скачанному файлу.
