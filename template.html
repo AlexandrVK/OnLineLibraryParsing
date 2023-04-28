@@ -10,68 +10,70 @@
   </head>
 
   <body>
-    <div class="container">
-      <nav aria-label="Page navigation example">
+    <div class="container mt-4">
+      <nav  aria-label="Page navigation example">
         <ul class="pagination">
-          {% set prev_page_url = "index" + (cur_page - 1)|string + ".html" %}
-          {% if cur_page > 1 %}
-            <li class="page-item">
-              <a class="page-link" href="{{ prev_page_url }}" aria-label="Previous">
-                <span aria-hidden="true">Назад</span>
-              </a>
+        {% set prev_page_url = "index" + (cur_page - 1)|string + ".html" %}
+        {% if cur_page > 1 %}
+          <li class="page-item">
+            <a class="page-link" href="{{ prev_page_url }}" aria-label="Previous">
+              <span aria-hidden="true">Назад</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">Назад</span>
+          </li>
+        {% endif %}
+        {% for num in range(1, max_page + 1) %}
+          {% set page_url = "index" + num|string + ".html" %}
+          {% if num == cur_page %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
             </li>
           {% else %}
-            <li class="page-item disabled">
-              <span class="page-link" aria-hidden="true">Назад</span>
-            </li>
-          {% endif %}
-          {% for num in range(1, max_page + 1) %}
-            {% set page_url = "index" + num|string + ".html" %}
-            {% if num == cur_page %}
-              <li class="page-item active">
-                <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-              </li>
-            {% else %}
-              <li class="page-item">
-                <a class="page-link" href="{{ page_url }}">{{ num }}</a>
-              </li>
-            {% endif %}
-          {% endfor %}
-          {% set next_page_url = "index" + (cur_page + 1)|string + ".html" %}
-          {% if cur_page < max_page %} 
             <li class="page-item">
-            <a class="page-link" href="{{ next_page_url }}" aria-label="Next">
-              <span aria-hidden="true">Вперёд</span>
-            </a>
-            </li>
-           {% else %}
-            <li class="page-item disabled">
-              <span class="page-link" aria-hidden="true">Вперёд</span>
-
+              <a class="page-link" href="{{ page_url }}">{{ num }}</a>
             </li>
           {% endif %}
+        {% endfor %}
+        {% set next_page_url = "index" + (cur_page + 1)|string + ".html" %}
+        {% if cur_page < max_page %} 
+          <li class="page-item">
+          <a class="page-link" href="{{ next_page_url }}" aria-label="Next">
+            <span aria-hidden="true">Вперёд</span>
+          </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">Вперёд</span>
+          </li>
+        {% endif %}
         </ul>
       </nav>
 
       <div class="row">
-        {% for book in books %}
-          <div class="col-6">
-            <div class="card mb-3" style="max-width: 540px;">
-              <div class="row no-gutters">
-                <div class="col-md-4">
-                  <img src="{{'../'+book.img_url}}" class="card-img" alt="{{ book.author+' - '+book.title }}">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{book.title}}</h5>
-                    <p class="card-text">{{book.author}}</p>
-                    <a href="{{'../'+book.book_path}}" target="_blank" rel="noopener noreferrer">Читать</a>
-                  </div>
+      {% for book in books %}
+        <div class="col-6">
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="{{'../'+book.img_url}}" class="card-img" alt="{{ book.author+' - '+book.title }}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{book.title}}</h5>
+                  <p class="card-text">{{book.author}}</p>
+                  {% for genre in book.genres %}
+                    <span class="badge badge-light">{{genre}}</span>
+                  {% endfor %}
+                  <p></p><a href="{{'../'+book.book_path}}" target="_blank" rel="noopener noreferrer">Читать</a></p>
                 </div>
               </div>
             </div>
           </div>
-        {% endfor %}
+        </div>
+      {% endfor%}
       </div>
     </div>
   </body>
