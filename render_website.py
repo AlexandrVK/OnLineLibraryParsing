@@ -1,10 +1,12 @@
+import json
 import math
 import os
 from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-import json
 from livereload import Server
 from more_itertools import chunked
+
 
 def on_reload ():
     env = Environment(

@@ -11,9 +11,7 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 
 
-
 def check_for_redirect(response):
-     
      if response.history:
         raise requests.exceptions.HTTPError()
 
@@ -101,7 +99,6 @@ def main():
             print(f"Ошибка соединения: {e}. Повторная попытка через 5 секунд...", file=sys.stderr)
             time.sleep(5) 
             continue
-
 
 if __name__ == "__main__":
     main()
