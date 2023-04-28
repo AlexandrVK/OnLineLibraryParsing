@@ -138,9 +138,6 @@ dmypy.json
 cython_debug/
 
 # Users
-books
-images
-pages
 poetry.lock
 pyproject.toml
 venv
